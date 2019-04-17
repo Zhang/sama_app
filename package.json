@@ -1,0 +1,27 @@
+{
+  "name": "sama_app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "concurrently": "^4.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "app": "concurrently \"npm run start\" \"cd server && npm run start\"",
+    "start": "cd client && npm run start",
+    "start-server": "cd server && npm run start",
+    "install-all": "concurrently \"cd client && npm install\" \"cd server && npm install\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rnelson082/sama_app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rnelson082/sama_app/issues"
+  },
+  "homepage": "https://github.com/rnelson082/sama_app#readme"
+}
