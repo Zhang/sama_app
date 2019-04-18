@@ -22,17 +22,17 @@ class Form extends React.Component {
         this.renderBoxes = this.renderBoxes.bind(this);
         this._onMouseDown = this._onMouseDown.bind(this);
         this.createNewBox = this.createNewBox.bind(this);
+        this.deleteBox = this.deleteBox.bind(this);
+        this._onMouseMove = this._onMouseMove.bind(this);
     }
 
     componentDidMount() {
-        // just use AJAX req here!
-        console.log(this.props)
-        getBoxes().then(boxes => {
-            this.setState({
-                boxes: boxes.data
-            })
-        })
         if (this.props.location.state.formType) {
+          getBoxes().then(boxes => {
+              this.setState({
+                  boxes: boxes.data
+              })
+          })
             this.setState({
                 formType: this.props.location.state.formType,
                 formTitle: this.props.location.state.formTitle,
@@ -40,11 +40,6 @@ class Form extends React.Component {
                 id: this.props.location.state.id
             })
         }
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-
-        // here we want to add and update the boxes to the state
     }
 
     handleInputChange = (e, field) => {
@@ -69,12 +64,11 @@ class Form extends React.Component {
     }
 
     updateForm = () => {
-        // this will involve the boxes
+        // this will involve saving form and the boxes
     }
 
     deleteForm = () => {
         const id = this.state.id;
-        console.log(id)
         deletePDF(this.props.match.params.id).then((data) => {
           this.props.history.push('/');
         })
@@ -82,17 +76,22 @@ class Form extends React.Component {
 
     renderBoxes = () => {
         return (
-          <div>
-            {
-              this.state.boxes.map(boxData => {
-                  return (
-                    <div>
-                      <Box coordinates={boxData.coordinates} label={'text'}/>
-                    </div>
-                  )
-            })
-          }
-          </div>
+            <div>
+                {
+                  this.state.boxes.map(boxData => {
+                      return (
+                          <div>
+                            <Box
+                                coordinates={boxData.coordinates}
+                                id={boxData._id}
+                                label={'text'}
+                                delete={this.deleteBox}
+                            />
+                          </div>
+                      )
+                    })
+                }
+            </div>
         )
     }
 
@@ -116,31 +115,33 @@ class Form extends React.Component {
             formId: this.props.match.params.id
         }
 
-        this.setState((prevState) => {
-            boxes: prevState.boxes.push(tempBoxData)
-        })
 
         saveBox(tempBoxData).then(box => {
             const appendNewBox = this.state.boxes.slice().concat(box.data);
-            console.log(appendNewBox);
-            // this.setState((prevState) => {
-            //     boxes: prevState.boxes.push(box.data)
-            // })
+            this.setState({
+                boxes: appendNewBox,
+                createBoxMode: false
+            })
         })
     }
 
-    _onMouseDown = (e) => {
-      console.log(e)
-      this.setState({ x: e.pageX, y: e.pageY }, this.createNewBox());
+    deleteBox = (id) => {
+        deleteBox(id).then(() => console.log('deleted')).catch(err => console.log(err))
     }
+
+    _onMouseDown = (e) => {
+      this.createNewBox();
+    }
+
+    _onMouseMove = (e) => {
+      this.setState({ x: e.pageX, y: e.pageY });
+    }
+    
     render() {
-      console.log(this.props, this.state)
-      // make modal?
       const isNew = this.props.location.state.formTitle ? false : true;
       const { x, y } = this.state;
       return (
-            <div onMouseDown={this.state.createBoxMode && this._onMouseDown}>
-            <h1>Mouse coordinates: { x } { y }</h1>
+            <div onMouseMove={this._onMouseMove} onMouseDown={this.state.createBoxMode && this._onMouseDown}>
                 <div>
                     {
                       isNew
