@@ -11,7 +11,7 @@ const API_PORT = process.env.API_PORT;
 const app = express();
 app.use(cors());
 
-// const routes = require('./controllers/routes');
+const routes = require('./controllers/routes');
 // const users = require('./controllers/users');
 
 db.once("open", () => console.log("connected to the database"));
@@ -27,7 +27,7 @@ app.use(logger("dev"));
 
 // // append /api for our http requests
 // app.use("/api", users);
-// app.use("/api", routes);
+app.use("/api", routes);
 // // use JWT auth to secure the api
 // app.use(jwt());
 
