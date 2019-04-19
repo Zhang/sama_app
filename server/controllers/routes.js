@@ -20,6 +20,20 @@ router.get("/getImage/:id", (req, res) => {
   });
 });
 
+/*
+  I think you'd enjoy the await / async syntax, though you'd probably have to use some promisified version of mongoose
+  These could be written as:
+
+  router.post("/updateImage", async (req, res) => {
+    const { id, update } = req.body;
+
+    try {
+      await PDFImage.findOneAndUpdate(id, update);
+      res.json({ success: true });
+    } catch (e) {
+      res.json({ success: false, error: e });
+    }
+*/
 router.post("/updateImage", (req, res) => {
   const { id, update } = req.body;
   PDFImage.findOneAndUpdate(id, update, err => {
@@ -53,6 +67,7 @@ router.post("/postImage", (req, res) => {
 router.get("/getForms", (req, res) => {
   Form.find((err, data) => {
     if (err) return res.json({ success: false, error: err });
+    // Can just be res.json({ success: true, data });
     return res.json({ success: true, data: data });
   });
 });
@@ -81,6 +96,8 @@ router.post("/postForm", (req, res) => {
 
 router.delete("/deleteForm/:id", (req, res) => {
   const id = mongoose.Types.ObjectId(req.params.id);
+  // I think mongoose allows for findByIdAndRemove
+  // Therefore, I think you can just call Form.findByIdAndRemove(id, cb)
   Form.deleteOne({"_id": id}, err => {
     if (err) return res.send(err);
     return res.json({ success: true, message: 'deleted ' + id });
@@ -123,7 +140,7 @@ router.post("/postBox", (req, res) => {
   data.boxData = boxData;
   data.coordinates = coordinates;
   data.dimensions = dimensions;
-  data.formId = formId
+  data.formId = formId;
   // data.boxIds = boxIds;
 
   data.save(err => {
@@ -145,4 +162,5 @@ router.delete("/deleteBox/:id", (req, res) => {
     return res.json({ success: true, message: 'deleted ' + id });
   });
 });
+
 module.exports = router;

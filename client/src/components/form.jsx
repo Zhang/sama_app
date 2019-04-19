@@ -130,16 +130,21 @@ class Form extends React.Component {
     }
 
     _onMouseDown = (e) => {
+      // Instead of tracking positions when the mouse moves, the event also comes with
+      // clientX and clientY props, saving you relatively expensive re-renders
+      // I believe it's accessed as e.clientY
       this.createNewBox();
     }
 
     _onMouseMove = (e) => {
       this.setState({ x: e.pageX, y: e.pageY });
     }
-    
+
     render() {
       const isNew = this.props.location.state.formTitle ? false : true;
+      // const isNew = !this.props.location.state.formTitle
       const { x, y } = this.state;
+      // I don't think these state props are used
       return (
             <div onMouseMove={this._onMouseMove} onMouseDown={this.state.createBoxMode && this._onMouseDown}>
                 <div>

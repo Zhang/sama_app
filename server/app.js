@@ -1,5 +1,6 @@
 require('rootpath')();
 require('dotenv').config();
+// Any reason this is var while the rest are const?
 var cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');

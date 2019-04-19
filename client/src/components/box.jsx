@@ -14,10 +14,11 @@ class Box extends React.Component {
        window.location.reload();
     }
     render() {
-      console.log(this.props)
         const { x, y } = this.props.coordinates;
 
         return (
+          // Note - style={top: xx} accepts integer values, no need to coerce
+          // If you want to coerce, you might also want to try `${y}px` for less characters
           <div style={{ position: 'absolute', top: y.toString() + 'px', left: x.toString() + 'px'}}>
               <textarea>Box</textarea><button onClick={this.remove}>x</button>
           </div>

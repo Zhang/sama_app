@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 // this will be our data base's data structure
 const BoxSchema = new Schema(
   {
+    // What's the difference between boxTitle and boxType?
     boxTitle: String,
     boxType: String,
     boxData: String,
